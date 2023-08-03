@@ -1,9 +1,9 @@
 ---
 version: "3"
 
-dotenv: [ '.env.local' ]
+dotenv: [ ".env.local" ]
 
 tasks:
   default:
     cmds:
-      - poetry run projectname
+      - poetry run {{projectname}}

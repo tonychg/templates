@@ -1,5 +1,5 @@
 {
-  description = "Python Template";
+  description = "{{projectname}}";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -23,11 +23,11 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = [
-              pkgs.go-task
-              pkgs.python310
+            pkgs.go-task
+            pkgs.python310
           ];
           packages = [
-              poetry2nix.packages.${system}.poetry
+            poetry2nix.packages.${system}.poetry
           ];
         };
       });
