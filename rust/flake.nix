@@ -29,7 +29,7 @@
         };
 
         packages.default = pkgs.rustPlatform.buildRustPackage rec {
-          name = "projectname"; # Same that is in Cargo.toml
+          name = "{{projectname}}"; # Same that is in Cargo.toml
 
           src = ./.;
 
