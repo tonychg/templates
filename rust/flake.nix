@@ -1,42 +1,39 @@
 {
-  description = "Rust Template";
-
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
-    flake-utils.url = github:numtide/flake-utils;
-
-    rust-overlay.url = github:oxalica/rust-overlay;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
-
-  outputs = { self, nixpkgs, rust-overlay, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        overlays = [ (import rust-overlay) ];
-        pkgs = import nixpkgs {
-          inherit system overlays;
-        };
-      in
-      {
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [
-            rust-bin.stable.latest.default
-            rust-analyzer
-          ];
-
-          buildInputs = with pkgs; [
-            go-task
-          ];
-        };
-
-        packages.default = pkgs.rustPlatform.buildRustPackage rec {
-          name = "{{projectname}}"; # Same that is in Cargo.toml
-
-          src = ./.;
-
-          cargoLock = {
-            lockFile = ./Cargo.lock;
+  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
+    flake-utils.lib.eachDefaultSystem
+      (system:
+        let
+          overlays = [ (import rust-overlay) ];
+          pkgs = import nixpkgs {
+            inherit system overlays;
           };
-        };
-      }
-    );
+
+          rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+
+          # compile-time deps
+          packages = with pkgs; [
+            curl
+            wget
+            pkg-config
+            rustToolchain
+          ];
+        in
+        with pkgs;
+        {
+          devShells.default = mkShell {
+            nativeBuildInputs = packages;
+          };
+        }
+      );
 }

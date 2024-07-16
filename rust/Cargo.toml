@@ -1,7 +1,5 @@
-[package]
-name = "{{projectname}}"
-version = "1.0.0"
-edition = "2021"
+[workspace]
+members = ["crates/*"]
+resolver = "2"
 
-[dependencies]
-# example = "1.0.0"
+[workspace.dependencies]
