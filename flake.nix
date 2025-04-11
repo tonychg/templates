@@ -19,6 +19,11 @@
         path = ./rust;
         description = "Rust template, using Naersk";
       };
+
+      rust-simple = {
+        path = ./rust-simple;
+        description = "Rust template using nix-shell";
+      };
     };
 
     defaultTemplate = self.templates.base;
